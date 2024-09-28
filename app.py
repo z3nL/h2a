@@ -1,4 +1,4 @@
-from flask import Flask,render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_mysqldb import MySQL
 from waitress import serve
  
@@ -26,8 +26,8 @@ def transactionspg():
 def signIn():
     username = request.form['username']
     password = request.form['password']
-    print(f"Username: {username}, Password: {password}")
     
+    return loggedinpg()
     
     # At this point, check if the username is equal to something in SQL 
     # base and then verify that the password is equal, otherwise cause 
