@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_mysqldb import MySQL
 from waitress import serve
+import MySQLdb.cursors  
  
 app = Flask(__name__)
 @app.route('/')
@@ -34,7 +35,9 @@ mysql = MySQL(app)
 def signIn():
     username = request.form['username']
     password = request.form['password']
-    cursor = mysql.connection.cursor()
+    
+    
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute('SELECT * FROM logininfo WHERE Username = %s', (username,))
     account = cursor.fetchone()
         
@@ -44,13 +47,12 @@ def signIn():
         if account['Password'] == password:
             print('successful' + password + username)
                 # Successfully authenticated
-            session['username'] = username
-            return 'Logged in successfully!'
+            return render_template('/H2ABank/loggedin.html')
         else:
-                return 'Incorrect password!'
+            return 'Incorrect password!'
     else:
         return 'Username not found!'
-    return render_template('/H2ABank/loggedin.html')
+
     
     # At this point, check if the username is equal to something in SQL 
     # base and then verify that the password is equal, otherwise cause 
