@@ -107,6 +107,15 @@
             width: 100%;
         }
     </style>
+    <script>
+        function logOut() {
+            const confirmation = confirm("Are you sure you want to log out?");
+            if (confirmation) {
+                alert('You have logged out!'); // Show alert message
+                window.location.href = 'login.html'; // Redirect to login page
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -133,8 +142,7 @@
         </div>
 
         <!-- Log Out Button -->
-        <button class="logout-button" onclick="alert('You have logged out!');">Log Out</button>
-        <a href="login.html"></a>
+        <button class="logout-button" onclick="logOut();">Log Out</button> <!-- Single button with function -->
     </div>
 </div>
 
