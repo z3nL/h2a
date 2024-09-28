@@ -3,21 +3,26 @@ from flask_mysqldb import MySQL
 from waitress import serve
  
 app = Flask(__name__)
+@app.route('/')
 
-
-
-
+@app.route('/H2ABank/login')
 def loginpg():
-    return render_template('../H2ABank/login.html')
+    return render_template('/H2ABank/login.html')
+
+@app.route('/H2ABank/loggedin')
 def loggedinpg():
-    return render_template('../H2ABank/loggedin.html')
+    return render_template('/H2ABank/loggedin.html')
+
+@app.route('/H2ABank/settings')
 def settingspg():
-    return render_template('../H2ABank/settings.html')
+    return render_template('/H2ABank/settings.html')
+
+@app.route('/H2ABank/transactions')
 def transactionspg():
-    return render_template('../H2ABank/transactions.html')
+    return render_template('/H2ABank/transactions.html')
 
 # Get the variables for the the the the login
-@app.route('/../H2ABank/login.html',methods=['GET', 'POST'])
+@app.route('/H2ABank/login',methods=['POST'])
 def signIn():
     username = request.form['username']
     password = request.form['password']
