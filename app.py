@@ -21,12 +21,35 @@ def settingspg():
 def transactionspg():
     return render_template('/H2ABank/transactions.html')
 
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'userid'
+mysql = MySQL(app)
+
+
 # Get the variables for the the the the login
 @app.route('/H2ABank/login',methods=['POST'])
 def signIn():
     username = request.form['username']
     password = request.form['password']
-    
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM logininfo WHERE Username = %s', (username,))
+    account = cursor.fetchone()
+        
+        # Check if the account exists
+    if account:
+            # Compare the password with the stored password (assuming plaintext; consider hashing)
+        if account['Password'] == password:
+            print('successful' + password + username)
+                # Successfully authenticated
+            session['username'] = username
+            return 'Logged in successfully!'
+        else:
+                return 'Incorrect password!'
+    else:
+        return 'Username not found!'
     return render_template('/H2ABank/loggedin.html')
     
     # At this point, check if the username is equal to something in SQL 
@@ -35,30 +58,6 @@ def signIn():
     
     
     
-
-'''
-
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'flask'
-
-mysql = MySQL(app)
- 
-#Creating a connection cursor
-cursor = mysql.connection.cursor()
- 
-#Executing SQL Statements
-cursor.execute(CREATE TABLE table_name(field1, field2...) )
-cursor.execute( INSERT INTO table_name VALUES(v1,v2...) )
-cursor.execute( DELETE FROM table_name WHERE condition )
- 
-#Saving the Actions performed on the DB
-mysql.connection.commit()
- 
-#Closing the cursor
-cursor.close()
-'''
 
 if __name__ == "__main__":
     serve(app, host = "0.0.0.0", port = 8000)
