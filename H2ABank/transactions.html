@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banking System - Dark Mode</title>
+    <title>Transfer Funds - BankPro</title>
     <style>
         /* General Reset */
         * {
@@ -28,7 +28,7 @@
         }
 
         header h1 {
-            color: #3498db; /* Changed to blue */
+            color: #3498db; /* Blue */
             font-size: 24px;
         }
 
@@ -66,41 +66,48 @@
             padding: 40px;
         }
 
-        .balance-section {
+        .form-section {
             background-color: #333;
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 30px;
         }
 
-        .balance-section h2 {
-            color: #3498db; /* Changed to blue */
-        }
-
-        .transaction-section {
-            background-color: #333;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .transaction-section h3 {
+        .form-section h2 {
+            color: #3498db;
             margin-bottom: 20px;
-            color: #3498db; /* Changed to blue */
         }
 
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #444;
+        .form-group {
+            margin-bottom: 15px;
         }
 
-        .transaction-item:last-child {
-            border-bottom: none;
-        }
-
-        .transaction-item span {
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
             color: #f5f5f5;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #444;
+            color: #f5f5f5;
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #2980b9;
         }
 
         /* Footer */
@@ -118,53 +125,30 @@
 <body>
 
 <header>
-    <h1>BankPro - Secure Banking System</h1>
+    <h1>Transfer Funds - BankPro</h1>
 </header>
 
 <div class="container">
     <!-- Sidebar Navigation -->
     <div class="sidebar">
-        <a href="index.html">Account Summary</a> <!-- Link to this page -->
-        <a href="transfer.html">Transfer Funds</a> <!-- Link to transfer funds page -->
+        <a href="index.html">Account Summary</a>
+        <a href="transfer.html">Transfer Funds</a>
         <a href="#">Pay Bills</a>
         <a href="#">Settings</a>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Balance Section -->
-        <div class="balance-section">
-            <h2>Account Balance</h2>
-            <p>Current Balance: <strong>$8,750.50</strong></p>
-        </div>
+        <!-- Transfer Funds Form -->
+        <div class="form-section">
+            <h2>Create a Transaction</h2>
 
-        <!-- Transaction Section -->
-        <div class="transaction-section">
-            <h3>Recent Transactions</h3>
+            <form action="#">
+                <div class="form-group">
+                    <label for="recipient">Recipient</label>
+                    <input type="text" id="recipient" name="recipient" placeholder="Enter recipient name" required>
+                </div>
 
-            <div class="transaction-item">
-                <span>Amazon Purchase</span>
-                <span>-$50.00</span>
-            </div>
-            <div class="transaction-item">
-                <span>Salary Deposit</span>
-                <span>+$3,500.00</span>
-            </div>
-            <div class="transaction-item">
-                <span>Utility Bill Payment</span>
-                <span>-$150.00</span>
-            </div>
-            <div class="transaction-item">
-                <span>Groceries</span>
-                <span>-$120.75</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<footer>
-    <p>&copy; 2024 BankPro. All rights reserved.</p>
-</footer>
-
-</body>
-</html>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" name="
