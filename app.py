@@ -27,7 +27,7 @@ def signIn():
     username = request.form['username']
     password = request.form['password']
     
-    return loggedinpg()
+    return render_template('/H2ABank/loggedin.html')
     
     # At this point, check if the username is equal to something in SQL 
     # base and then verify that the password is equal, otherwise cause 
