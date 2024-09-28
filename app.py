@@ -12,21 +12,21 @@ def loginpg():
 
 @app.route('/H2ABank/loggedin')
 def loggedinpg():
-    if request.referrer and (request.referrer.endswith('/H2ABank/login')  or request.referrer.endswith('/H2ABank/transactions')  or request.referrer.endswith('/H2ABank/settings')):
+    if request.referrer and (request.referrer.endswith('/H2ABank/login')  or request.referrer.endswith('/H2ABank/transactions')  or request.referrer.endswith('/H2ABank/settings')or (request.referrer.endswith('/H2ABank/loggedin'))):
         return render_template('/H2ABank/loggedin.html')
     else:
         return redirect(url_for('loginpg'))  # Redirect to the login page
 
 @app.route('/H2ABank/settings')
 def settingspg():
-    if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/transactions') or (request.referrer.endswith('/H2ABank/login') )):
+    if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/transactions') or (request.referrer.endswith('/H2ABank/login') ) or (request.referrer.endswith('/H2ABank/settings'))):
         return render_template('/H2ABank/settings.html')
     else:
         return redirect(url_for('loggedinpg')) 
 
 @app.route('/H2ABank/transactions')
 def transactionspg():
-    if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/settings') or (request.referrer.endswith('/H2ABank/login') )):
+    if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/settings') or (request.referrer.endswith('/H2ABank/login') )or (request.referrer.endswith('/H2ABank/transactions'))):
         return render_template('/H2ABank/transactions.html')
     else:
         return redirect(url_for('loggedinpg'))
@@ -44,6 +44,7 @@ mysql = MySQL(app)
 def signIn():
     username = request.form['username']
     password = request.form['password']
+
     
     
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
