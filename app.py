@@ -12,15 +12,24 @@ def loginpg():
 
 @app.route('/H2ABank/loggedin')
 def loggedinpg():
-    return render_template('/H2ABank/loggedin.html')
+    if request.referrer and (request.referrer.endswith('/H2ABank/login')  or request.referrer.endswith('/H2ABank/transactions')  or request.referrer.endswith('/H2ABank/settings')):
+        return render_template('/H2ABank/loggedin.html')
+    else:
+        return redirect(url_for('loginpg'))  # Redirect to the login page
 
 @app.route('/H2ABank/settings')
 def settingspg():
-    return render_template('/H2ABank/settings.html')
+    if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/transactions') or (request.referrer.endswith('/H2ABank/login') )):
+        return render_template('/H2ABank/settings.html')
+    else:
+        return redirect(url_for('loggedinpg')) 
 
 @app.route('/H2ABank/transactions')
 def transactionspg():
-    return render_template('/H2ABank/transactions.html')
+    if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/settings') or (request.referrer.endswith('/H2ABank/login') )):
+        return render_template('/H2ABank/transactions.html')
+    else:
+        return redirect(url_for('loggedinpg'))
 
 
 app.config['MYSQL_HOST'] = 'localhost'
