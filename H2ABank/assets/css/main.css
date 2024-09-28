@@ -804,11 +804,20 @@ button,
   display: -webkit-flex;
   display: -ms-flex;
   display: flex;
-  position: relative; }
+  flex-direction: column;
+  position: relative; } 
+  #signup-form input {
+    margin-left: 0; /* or desired margin */
+  }
   #signup-form input[type="text"],
   #signup-form input[type="password"],
   #signup-form input[type="email"] {
+    margin-bottom:  10px;
+    cursor: pointer;
     width: 18em; }
+  #signup-form input[type="submit"] {
+    width: 79.08px;
+  }
   #signup-form > * {
     margin: 0 0 0 1em; }
   #signup-form > :first-child {
