@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysqldb import MySQL
 from waitress import serve
-import MySQLdb.cursors  
+import MySQLdb.cursors
+import os
  
 app = Flask(__name__)
 @app.route('/')
@@ -55,13 +56,16 @@ def signIn():
     if account:
             # Compare the password with the stored password (assuming plaintext; consider hashing)
         if account['Password'] == password:
-            print('successful' + password + username)
+            acc_number = account['Acc Number']
+            address = account['Address']
+            print(f'successful:  {password}  {username}  {acc_number}  {address}')
                 # Successfully authenticated
             return render_template('/H2ABank/loggedin.html')
         else:
-            return 'Incorrect password!'
+            flash('Incorrect password!', 'error')
     else:
-        return 'Username not found!'
+        flash('Username not found!', 'error')
+    return render_template('/H2ABank/login.html')
 
     
     # At this point, check if the username is equal to something in SQL 
@@ -72,4 +76,5 @@ def signIn():
     
 
 if __name__ == "__main__":
+    app.secret_key = os.urandom(24)
     serve(app, host = "0.0.0.0", port = 8000)
