@@ -100,7 +100,7 @@
 				}, settings.delay);
 
 		})();
-
+    /*
 	// Signup Form.
 		(function() {
 
@@ -137,7 +137,11 @@
 			// Events.
 			// Note: If you're *not* using AJAX, get rid of this event listener.
 				$form.addEventListener('submit', function(event) {
+					
+					var username = document.getElementById("username").value;
+					var password = document.getElementById("password").value;
 
+					console.log(username + " " + password);
 					event.stopPropagation();
 					event.preventDefault();
 
@@ -167,5 +171,6 @@
 				});
 
 		})();
+		*/
 
 })();
