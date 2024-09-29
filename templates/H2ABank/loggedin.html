@@ -113,6 +113,27 @@
             color: #f5f5f5;
         }
 
+        .alert-button {
+            background-color: #3498db; /* Blue */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            align-self: center; /* Center it vertically */
+        }
+
+        .alert-button:hover {
+            background-color: #2980b9; /* Darker blue */
+        }
+
+        .explanation {
+            display: none;
+            margin-bottom: 10px;
+            border: 1px solid;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -143,6 +164,8 @@
             <!-- Transaction Section -->
             <div class="transaction-section">
                 <h3>Recent Transactions</h3>
+                <button class="alert-button" onclick="toggleExplanation()">Alerts</button>
+                <div class="explanation" id="explanationDiv">{{explanation}}</div>
                 {% for transaction in transactions %}
                     <div class="transaction-item" style="{% if transaction['id'] in suspicious_transactions %} background-color: red; {% endif %}">
                         <span>{{transaction['Transaction Recipient']}}</span>
@@ -157,6 +180,17 @@
         <p>&copy; 2024 H2A Banking. All rights reserved.</p>
     </footer>
 </div>
+
+<script>
+    function toggleExplanation() {
+        var explanationDiv = document.getElementById('explanationDiv');
+        if (explanationDiv.style.display === 'none' || explanationDiv.style.display === '') {
+            explanationDiv.style.display = 'block'; // Show the explanation div
+        } else {
+            explanationDiv.style.display = 'none'; // Hide the explanation div
+        }
+    }
+</script>
 
 </body>
 </html>

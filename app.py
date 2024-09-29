@@ -28,9 +28,10 @@ async def loggedinpg():
         transactions = session['transactions']
         acc_num = session['acc_num']
         suspicious_transactions = session['suspicious_transactions']
+        explanation = session['explanation']
     
     if request.referrer and (request.referrer.endswith('/H2ABank/login')  or request.referrer.endswith('/H2ABank/transactions')  or request.referrer.endswith('/H2ABank/settings')or (request.referrer.endswith('/H2ABank/loggedin'))):
-        return render_template('/H2ABank/loggedin.html', transactions=transactions, suspicious_transactions=list(suspicious_transactions))
+        return render_template('/H2ABank/loggedin.html', transactions=transactions, suspicious_transactions=list(suspicious_transactions), explanation=explanation)
     else:
         return redirect(url_for('loginpg'))  # Redirect to the login page
 
@@ -75,7 +76,7 @@ async def transactionspg():
             session['transactions'] = insCursor.fetchall()
             
             # Add the suspicious_transactions or [] check here
-            suspicious_transactions = await checkSuspicious(acc_num)
+            explanation, suspicious_transactions = await checkSuspicious(acc_num)
             session['suspicious_transactions'] = suspicious_transactions or []  # Ensure it's always a list
 
     if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/settings') or (request.referrer.endswith('/H2ABank/login')) or (request.referrer.endswith('/H2ABank/transactions'))):
@@ -114,7 +115,8 @@ async def signIn():
             session['transactions'] = transactions
             
             # Add the suspicious_transactions or [] check here
-            suspicious_transactions = await checkSuspicious(acc_num)
+            explanation, suspicious_transactions = await checkSuspicious(acc_num)
+            session['explanation'] = explanation
             session['suspicious_transactions'] = suspicious_transactions or []  # Ensure it's always a list
             
             return redirect(url_for('loggedinpg'))
@@ -185,7 +187,7 @@ async def checkSuspicious(acc_number):
     print("\nList of suspicious transactions:")
     print(suspicious_transactions)
 
-    return suspicious_transactions
+    return response_content, suspicious_transactions
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(24)
