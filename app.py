@@ -13,8 +13,11 @@ def loginpg():
 
 @app.route('/H2ABank/loggedin')
 def loggedinpg():
+    if 'transactions' in session:
+        transactions = session['transactions']
+    
     if request.referrer and (request.referrer.endswith('/H2ABank/login')  or request.referrer.endswith('/H2ABank/transactions')  or request.referrer.endswith('/H2ABank/settings')or (request.referrer.endswith('/H2ABank/loggedin'))):
-        return render_template('/H2ABank/loggedin.html')
+        return render_template('/H2ABank/loggedin.html', transactions=transactions)
     else:
         return redirect(url_for('loginpg'))  # Redirect to the login page
 
@@ -62,8 +65,12 @@ def signIn():
             # Compare the password with the stored password (assuming plaintext; consider hashing)
         if account['Password'] == password:
             session['username'] = username
-            session['acc_num'] = account['Acc Number']
+            acc_num = account['Acc Number']
+            session['acc_num'] = acc_num
             session['address'] = account['Address']
+            cursor.execute('Select * FROM `transaction tables` WHERE `Account Number` = %s', (acc_num,))
+            transactions = cursor.fetchall()
+            session['transactions'] = transactions
             return render_template('/H2ABank/loggedin.html')
         else:
             flash('Incorrect password!', 'error')

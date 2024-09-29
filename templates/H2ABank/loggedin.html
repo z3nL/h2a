@@ -143,23 +143,12 @@
             <!-- Transaction Section -->
             <div class="transaction-section">
                 <h3>Recent Transactions</h3>
-
-                <div class="transaction-item">
-                    <span>Amazon Purchase</span>
-                    <span>-$50.00</span>
-                </div>
-                <div class="transaction-item">
-                    <span>Salary Deposit</span>
-                    <span>+$3,500.00</span>
-                </div>
-                <div class="transaction-item">
-                    <span>Utility Bill Payment</span>
-                    <span>-$150.00</span>
-                </div>
-                <div class="transaction-item">
-                    <span>Groceries</span>
-                    <span>-$120.75</span>
-                </div>
+                {% for transaction in transactions %}
+                    <div class="transaction-item">
+                        <span>{{transaction['Transaction Recipient']}}</span>
+                        <span>{{transaction['Transaction Amount']}}</span>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
