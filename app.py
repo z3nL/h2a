@@ -66,7 +66,6 @@ def transactionspg():
                 insCursor.execute('Select * FROM `transaction tables` WHERE `Account Number` = %s ORDER BY `Date Of Transaction` DESC, `Time of Transaction` DESC', (acc_num,))
                 session['transactions'] = insCursor.fetchall()
                 session['suspicious_transactions'] = checkSuspicious(acc_num)
-                #checkNewSus(acc_num, transactionAmt, transactionTime, transactionDate, transactionRecipient, transactionLoc):
         
     
     if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/settings') or (request.referrer.endswith('/H2ABank/login') )or (request.referrer.endswith('/H2ABank/transactions'))):
@@ -127,15 +126,15 @@ def checkSuspicious(acc_number):
             {
                 "role": "system",
                 "content": (
-                    "You are looking for suspicious transactions. Suspicious entails far distance in location from other transactions, "
-                    "significantly larger amounts being added or subtracted, or irregular transactions that oppose account patterns. "
-                    "Other instances of suspicious transactions include seemingly unknown recipients as well as odd times for transactions to take place. "
-                    "Keep in mind to only compare patterns that share the same account number. There are also possibilities to travel and leave the original account location. "
-                    "These can be recognized by consistent transactions at similar locations. "
-                    "Keep in mind that even though those transactions might have similar locations, large numbers are still suspicious. "
-                    "For example, if an average transaction is for less than 1000 dollars, anything much more than the average can be seen as suspicious, "
-                    "excluding outliers from the average. Similarly, if a transaction is only made one time at a far away location, "
-                    "it can be seen as suspicious. Please only return transaction IDs."
+                    "You are checking if the new transaction being added is considered suspicious. "
+                    "Suspicious transactions include instances where there is a significant distance in location from previous transactions, "
+                    "much larger amounts being added or subtracted (such as 200% or more, excluding these amounts from the average), "
+                    "or irregular transactions that deviate from established account patterns. " 
+                    "Additionally, suspicious transactions may involve unknown or unfamiliar recipients or occur at odd or unusual times. "
+                    "Be aware that while some transactions may occur in similar locations due to travel or consistent behavior, "
+                    "unusually large transactions in such cases are still considered suspicious. "
+                    "Ensure that comparisons are made only between transactions within the same account number. "
+                    "Please return only the transaction IDs."
                 )
             },
             {
@@ -166,37 +165,6 @@ def checkSuspicious(acc_number):
     print(suspicious_transactions)
 
     return suspicious_transactions
-
-
-def checkNewSus(acc_number, transaction_amt, transaction_time, transaction_recepient, transaction_loc):
-    tempCursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    tempCursor.execute('SELECT * FROM `transaction tables` WHERE `Account Number`  = %s', (acc_number,))
-    currentTransactions = tempCursor.fetchall()
-    transactions_str = str(currentTransactions)
-    completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": "system", 
-                "content": ("You are looking for suspicious transactions. Suspicious entails far distance in location from other transactions, "
-                            "significantly larger amounts being added or subtracted, or irregular transactions that oppose account patterns. "
-                            "Other instances of suspicious transactions include seemingly unknown recipients as well as odd times for transactions "
-                            "to take place. Keep in mind to only compare "
-                            "patterns that share the same account number. There are also possibilities to travel, and leave the original account location. "
-                            "These can be recognized by consistent transactions at similar locations."
-                            "Keep in mind that even though those transactions might have similar locations, large numbers are still suspicious."
-                            "For example, if an average transaction is for less than 1000 dollars, anything much more than the average can be seen as suspicios"
-                            "excluding outliers from the average. Similarly, if a transaction is only made one time at a far away location"
-                            "it can be seen as suspicious. Please only return transaction IDs.")
-            },
-            {
-                "role": "user", 
-                "content": (f"Given a dataset {transactions_str}, as well as the information {acc_number}, {transaction_amt}, {transaction_time}, {transaction_recepient}, and {transaction_loc}, compare it to other transactions and determine if the transaction is suspicious. Only return a yes or no answer, followed by an explaination why.")
-                           
-            }
-        ]
-    )
-    return completion
     
 
 if __name__ == "__main__":
