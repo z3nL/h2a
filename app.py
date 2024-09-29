@@ -60,8 +60,9 @@ def transactionspg():
                 insCursor.execute (
                     "INSERT INTO `transaction tables` (`Account Number`, `Transaction Amount`, `Time of Transaction`, `Date Of Transaction`, `Transaction Recipient`, `Transaction Location`, `id`) "
                     "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                    (acc_num, transactionAmt, transactionTime, transactionDate, transactionRecipient, transactionLoc, maxID+1)
+                    (acc_num, transactionAmt, transactionTime, transactionDate, transactionRecipient, transactionLoc, maxID+1,)
                 )
+                mysql.connection.commit()
                 #checkNewSus(acc_num, transactionAmt, transactionTime, transactionDate, transactionRecipient, transactionLoc):
         
     
