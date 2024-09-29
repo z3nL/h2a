@@ -98,7 +98,7 @@ def checkSuspicious(acc_number):
                 "content": ("You are looking for suspicious transactions. Suspicious entails far distance in location from other transactions, "
                             "significantly larger amounts being added or subtracted, or irregular transactions that oppose account patterns. "
                             "Other instances of suspicious transactions include seemingly unknown recipients as well as odd times for transactions to take place. Keep in mind to only compare "
-                            "patterns that share the same account number. Please only return transaction IDs.")
+                            "patterns that share the same account number. There are also possibilities to travel, and leave the original account location. Please only return transaction IDs.")
             },
             {
                 "role": "user", 
@@ -116,7 +116,11 @@ def checkSuspicious(acc_number):
     print("\nList of suspicious transactions:")
     print(suspicious_transactions)
     return currentTransactions
-def checkNewSus(acc_num, transaction_amt, transaction_time, transaction_recepient, transaction_loc):
+
+
+
+
+def checkNewSus(acc_number, transaction_amt, transaction_time, transaction_recepient, transaction_loc):
     tempCursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     tempCursor.execute('SELECT * FROM `transaction tables` WHERE `Account Number`  = %s', (acc_number,))
     currentTransactions = tempCursor.fetchall()
