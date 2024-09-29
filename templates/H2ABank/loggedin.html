@@ -144,7 +144,7 @@
             <div class="transaction-section">
                 <h3>Recent Transactions</h3>
                 {% for transaction in transactions %}
-                    <div class="transaction-item">
+                    <div class="transaction-item" style="{% if transaction['id'] in suspicious_transactions %} background-color: red; {% endif %}">
                         <span>{{transaction['Transaction Recipient']}}</span>
                         <span>{{transaction['Transaction Amount']}}</span>
                     </div>
