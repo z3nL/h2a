@@ -23,7 +23,7 @@ def loggedinpg():
     if 'transactions' in session:
         transactions = session['transactions']
         acc_num = session['acc_num']
-        suspicious_transactions = checkSuspicious(acc_num)
+        suspicious_transactions = session['suspicious_transactions']
     
     if request.referrer and (request.referrer.endswith('/H2ABank/login')  or request.referrer.endswith('/H2ABank/transactions')  or request.referrer.endswith('/H2ABank/settings')or (request.referrer.endswith('/H2ABank/loggedin'))):
         return render_template('/H2ABank/loggedin.html', transactions=transactions,  suspicious_transactions=suspicious_transactions)
@@ -65,6 +65,7 @@ def transactionspg():
                 mysql.connection.commit()
                 insCursor.execute('Select * FROM `transaction tables` WHERE `Account Number` = %s ORDER BY `Date Of Transaction` DESC, `Time of Transaction` DESC', (acc_num,))
                 session['transactions'] = insCursor.fetchall()
+                session['suspicious_transactions'] = checkSuspicious(acc_num)
                 #checkNewSus(acc_num, transactionAmt, transactionTime, transactionDate, transactionRecipient, transactionLoc):
         
     
@@ -104,7 +105,7 @@ def signIn():
             cursor.execute('Select * FROM `transaction tables` WHERE `Account Number` = %s ORDER BY `Date Of Transaction` DESC, `Time of Transaction` DESC', (acc_num,))
             transactions = cursor.fetchall()
             session['transactions'] = transactions
-            print(checkSuspicious(acc_num))
+            session['suspicious_transactions'] = checkSuspicious(acc_num)
             return redirect(url_for('loggedinpg'))
         else:
             flash('Incorrect password!', 'error')
