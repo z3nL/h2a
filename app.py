@@ -63,6 +63,8 @@ def transactionspg():
                     (acc_num, transactionAmt, transactionTime, transactionDate, transactionRecipient, transactionLoc, maxID+1,)
                 )
                 mysql.connection.commit()
+                insCursor.execute('Select * FROM `transaction tables` WHERE `Account Number` = %s ORDER BY `Date Of Transaction` DESC, `Time of Transaction` DESC', (acc_num,))
+                session['transactions'] = insCursor.fetchall()
                 #checkNewSus(acc_num, transactionAmt, transactionTime, transactionDate, transactionRecipient, transactionLoc):
         
     
@@ -99,7 +101,7 @@ def signIn():
             acc_num = account['Acc Number']
             session['acc_num'] = acc_num
             session['address'] = account['Address']
-            cursor.execute('Select * FROM `transaction tables` WHERE `Account Number` = %s', (acc_num,))
+            cursor.execute('Select * FROM `transaction tables` WHERE `Account Number` = %s ORDER BY `Date Of Transaction` DESC, `Time of Transaction` DESC', (acc_num,))
             transactions = cursor.fetchall()
             session['transactions'] = transactions
             print(checkSuspicious(acc_num))
