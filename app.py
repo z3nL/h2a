@@ -3,7 +3,13 @@ from flask_mysqldb import MySQL
 from waitress import serve
 import MySQLdb.cursors
 import os
- 
+import openai
+from dotenv import load_dotenv
+import ast
+
+load_dotenv()
+openai_api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = openai_api_key
 app = Flask(__name__)
 @app.route('/')
 
@@ -85,6 +91,7 @@ def signIn():
             cursor.execute('Select * FROM `transaction tables` WHERE `Account Number` = %s', (acc_num,))
             transactions = cursor.fetchall()
             session['transactions'] = transactions
+            print(checkSuspicious(acc_num))
             return redirect(url_for('loggedinpg'))
         else:
             flash('Incorrect password!', 'error')
@@ -92,7 +99,62 @@ def signIn():
         flash('Username not found!', 'error')
     return render_template('/H2ABank/login.html')
     
-    
+
+def checkSuspicious(acc_number):
+    tempCursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    tempCursor.execute('SELECT * FROM `transaction tables` WHERE `Account Number`  = %s', (acc_number,))
+    currentTransactions = tempCursor.fetchall()
+    transactions_str = str(currentTransactions)
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system", 
+                "content": ("You are looking for suspicious transactions. Suspicious entails far distance in location from other transactions, "
+                            "significantly larger amounts being added or subtracted, or irregular transactions that oppose account patterns. "
+                            "Other instances of suspicious transactions include seemingly unknown recipients as well as odd times for transactions to take place. Keep in mind to only compare "
+                            "patterns that share the same account number. There are also possibilities to travel, and leave the original account location. Please only return transaction IDs.")
+            },
+            {
+                "role": "user", 
+                "content": (f"Given a dataset {transactions_str}, first provide an explanation of the suspicious transactions. Then, on a separate line, "
+                            "return only a Python list of the suspicious transaction IDs. Ensure the list starts on a new line with no additional text.")
+            }
+        ]
+    )
+    currentTransactions = completion['choices'][0]['message']['content']
+    explanation, list_str = currentTransactions.rsplit("\n", 1)
+    suspicious_transactions = ast.literal_eval(list_str.strip())
+    print("Explanation:")
+    print(explanation)
+
+    print("\nList of suspicious transactions:")
+    print(suspicious_transactions)
+    return currentTransactions
+
+def checkNewSus(acc_number, transaction_amt, transaction_time, transaction_recepient, transaction_loc):
+    tempCursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    tempCursor.execute('SELECT * FROM `transaction tables` WHERE `Account Number`  = %s', (acc_number,))
+    currentTransactions = tempCursor.fetchall()
+    transactions_str = str(currentTransactions)
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system", 
+                "content": ("You are checking if the new transaction being added is considered suspicious. Suspicious entails far distance in location from other transactions, "
+                            "significantly larger amounts being added or subtracted, or irregular transactions that oppose account patterns. "
+                            "Other instances of suspicious transactions include seemingly unknown recipients as well as odd times for transactions to take place. Keep in mind to only compare "
+                            "patterns that share the same account number. Please only return transaction IDs.")
+            },
+            {
+                "role": "user", 
+                "content": (f"Given a dataset {transactions_str}, as well as the information {acc_number}, {transaction_amt}, {transaction_time}, {transaction_recepient}, and {transaction_loc}, compare it to other transactions and determine if the transaction is suspicious. Only return a yes or no answer, followed by an explaination why.")
+                           
+            }
+        ]
+    )
+    return completion
     
 
 if __name__ == "__main__":
