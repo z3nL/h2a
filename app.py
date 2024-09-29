@@ -39,7 +39,7 @@ def settingspg():
     else:
         return redirect(url_for('loggedinpg')) 
 
-@app.route('/H2ABank/transactions')
+@app.route('/H2ABank/transactions', methods=['GET', 'POST'])
 def transactionspg():
     if request.method == 'POST':
             if 'username' in session:
@@ -49,10 +49,9 @@ def transactionspg():
                 transactionRecipient = request.form.get('transaction_recipient')
                 transactionLoc = request.form.get('transaction_location')
                 transactionDate = request.form.get('recipient')
-                print(f"{acc_num} {transactionAmt} {transactionTime} {transactionDate} {transactionRecipient} {transactionLoc}")
+                print(f"---\nHELLO : {acc_num} {transactionAmt} {transactionTime} {transactionDate} {transactionRecipient} {transactionLoc}\n---\n")
             #code to import it to SQL database
             #checkNewSus(acc_number, transaction_amt, transaction_time, transaction_recepient, transaction_loc):
-            
         
     
     if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/settings') or (request.referrer.endswith('/H2ABank/login') )or (request.referrer.endswith('/H2ABank/transactions'))):
