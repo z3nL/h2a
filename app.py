@@ -6,6 +6,7 @@ import os
 import openai
 from dotenv import load_dotenv
 import ast
+import datetime
 
 load_dotenv()
 openai_api_key = os.getenv('OPENAI_API_KEY')
@@ -47,13 +48,21 @@ def transactionspg():
             if 'username' in session:
                 acc_num = session['acc_num']
                 transactionAmt = request.form.get('transaction_amount')
-                transactionTime = request.form.get('transaction_time')
+                current_time = datetime.datetime.now()
+                transactionTime = f"{current_time.hour:02}:{current_time.minute:02}"
+                transactionDate = f"{current_time.year}-{current_time.month}-{current_time.day}"
                 transactionRecipient = request.form.get('transaction_recipient')
                 transactionLoc = request.form.get('transaction_location')
-                transactionDate = request.form.get('recipient')
                 print(f"---\nHELLO : {acc_num} {transactionAmt} {transactionTime} {transactionDate} {transactionRecipient} {transactionLoc}\n---\n")
-            #code to import it to SQL database
-            #checkNewSus(acc_number, transaction_amt, transaction_time, transaction_recepient, transaction_loc):
+                insCursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                insCursor.execute("SELECT MAX(`Transaction Amount`) FROM `transaction tables`")
+                maxID = insCursor.fetchone()['MAX(`Transaction Amount`)']
+                insCursor.execute (
+                    "INSERT INTO `transaction tables` (`Account Number`, `Transaction Amount`, `Time of Transaction`, `Date Of Transaction`, `Transaction Recipient`, `Transaction Location`, `id`) "
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    (acc_num, transactionAmt, transactionTime, transactionDate, transactionRecipient, transactionLoc, maxID+1)
+                )
+                #checkNewSus(acc_num, transactionAmt, transactionTime, transactionDate, transactionRecipient, transactionLoc):
         
     
     if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/settings') or (request.referrer.endswith('/H2ABank/login') )or (request.referrer.endswith('/H2ABank/transactions'))):
