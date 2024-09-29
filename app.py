@@ -55,8 +55,8 @@ def transactionspg():
                 transactionLoc = request.form.get('transaction_location')
                 print(f"---\nHELLO : {acc_num} {transactionAmt} {transactionTime} {transactionDate} {transactionRecipient} {transactionLoc}\n---\n")
                 insCursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                insCursor.execute("SELECT MAX(`Transaction Amount`) FROM `transaction tables`")
-                maxID = insCursor.fetchone()['MAX(`Transaction Amount`)']
+                insCursor.execute("SELECT MAX(`id`) FROM `transaction tables`")
+                maxID = insCursor.fetchone()['MAX(`id`)']
                 insCursor.execute (
                     "INSERT INTO `transaction tables` (`Account Number`, `Transaction Amount`, `Time of Transaction`, `Date Of Transaction`, `Transaction Recipient`, `Transaction Location`, `id`) "
                     "VALUES (%s, %s, %s, %s, %s, %s, %s)",
