@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_mysqldb import MySQL
 from waitress import serve
 import MySQLdb.cursors
@@ -20,10 +20,15 @@ def loggedinpg():
 
 @app.route('/H2ABank/settings')
 def settingspg():
+    if 'username' in session:
+        username = session['username']
+        acc_num = session['acc_num']
+        address = session['address']
+        
     if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/transactions') or (request.referrer.endswith('/H2ABank/login') ) or (request.referrer.endswith('/H2ABank/settings'))):
-        return render_template('/H2ABank/settings.html')
+        return render_template('/H2ABank/settings.html', username=username, acc_num=acc_num, address=address)
     else:
-        return redirect(url_for('loggedinpg')) 
+        return redirect(url_for('loggedinpg'), username=username, acc_num=acc_num, address=address) 
 
 @app.route('/H2ABank/transactions')
 def transactionspg():
@@ -56,10 +61,9 @@ def signIn():
     if account:
             # Compare the password with the stored password (assuming plaintext; consider hashing)
         if account['Password'] == password:
-            acc_number = account['Acc Number']
-            address = account['Address']
-            print(f'successful:  {password}  {username}  {acc_number}  {address}')
-                # Successfully authenticated
+            session['username'] = username
+            session['acc_num'] = account['Acc Number']
+            session['address'] = account['Address']
             return render_template('/H2ABank/loggedin.html')
         else:
             flash('Incorrect password!', 'error')
