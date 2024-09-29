@@ -71,7 +71,7 @@ def signIn():
             cursor.execute('Select * FROM `transaction tables` WHERE `Account Number` = %s', (acc_num,))
             transactions = cursor.fetchall()
             session['transactions'] = transactions
-            return render_template('/H2ABank/loggedin.html')
+            return redirect(url_for('loggedinpg'))
         else:
             flash('Incorrect password!', 'error')
     else:
