@@ -28,7 +28,7 @@ def settingspg():
     if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/transactions') or (request.referrer.endswith('/H2ABank/login') ) or (request.referrer.endswith('/H2ABank/settings'))):
         return render_template('/H2ABank/settings.html', username=username, acc_num=acc_num, address=address)
     else:
-        return redirect(url_for('loggedinpg'), username=username, acc_num=acc_num, address=address) 
+        return redirect(url_for('loggedinpg')) 
 
 @app.route('/H2ABank/transactions')
 def transactionspg():
@@ -70,11 +70,6 @@ def signIn():
     else:
         flash('Username not found!', 'error')
     return render_template('/H2ABank/login.html')
-
-    
-    # At this point, check if the username is equal to something in SQL 
-    # base and then verify that the password is equal, otherwise cause 
-    # error message
     
     
     
