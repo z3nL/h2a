@@ -137,7 +137,7 @@ def checkNewSus(acc_number, transaction_amt, transaction_time, transaction_recep
             },
             {
                 "role": "user", 
-                "content": (f"Given a dataset {transactions_str}, as well as the information {acc_num}, {transaction_amt}, {transaction_time}, {transaction_recepient}, and {transaction_loc}, compare it to other transactions and determine if the transaction is suspicious. Only return a yes or no answer, followed by an explaination why.")
+                "content": (f"Given a dataset {transactions_str}, as well as the information {acc_number}, {transaction_amt}, {transaction_time}, {transaction_recepient}, and {transaction_loc}, compare it to other transactions and determine if the transaction is suspicious. Only return a yes or no answer, followed by an explaination why.")
                            
             }
         ]
