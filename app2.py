@@ -97,7 +97,7 @@ def checkSuspicious(acc_number):
                 "role": "system", 
                 "content": ("You are looking for suspicious transactions. Suspicious entails far distance in location from other transactions, "
                             "significantly larger amounts being added or subtracted, or irregular transactions that oppose account patterns. "
-                            "Other instances of suspicious transactions include seemingly unknown recipients as well. Keep in mind to only compare "
+                            "Other instances of suspicious transactions include seemingly unknown recipients as well as odd times for transactions to take place. Keep in mind to only compare "
                             "patterns that share the same account number. Please only return transaction IDs.")
             },
             {
@@ -116,6 +116,29 @@ def checkSuspicious(acc_number):
     print("\nList of suspicious transactions:")
     print(suspicious_transactions)
     return currentTransactions
+def checkNewSus(acc_num, transaction_amt, transaction_time, transaction_recepient, transaction_loc):
+    tempCursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    tempCursor.execute('SELECT * FROM `transaction tables` WHERE `Account Number`  = %s', (acc_number,))
+    currentTransactions = tempCursor.fetchall()
+    transactions_str = str(currentTransactions)
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system", 
+                "content": ("You are checking if the new transaction being added is considered suspicious. Suspicious entails far distance in location from other transactions, "
+                            "significantly larger amounts being added or subtracted, or irregular transactions that oppose account patterns. "
+                            "Other instances of suspicious transactions include seemingly unknown recipients as well as odd times for transactions to take place. Keep in mind to only compare "
+                            "patterns that share the same account number. Please only return transaction IDs.")
+            },
+            {
+                "role": "user", 
+                "content": (f"Given a dataset {transactions_str}, as well as the information {acc_num}, {transaction_amt}, {transaction_time}, {transaction_recepient}, and {transaction_loc}, compare it to other transactions and determine if the transaction is suspicious. Only return a yes or no answer, followed by an explaination why.")
+                           
+            }
+        ]
+    )
+    return completion
 
     
 if __name__ == "__main__":
