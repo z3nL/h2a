@@ -35,6 +35,24 @@ def settingspg():
 
 @app.route('/H2ABank/transactions')
 def transactionspg():
+    if 'username' in session:
+        acc_num = session['acc_num']
+        transactionAmt = request.form.get('transaction_amount')
+        transactionTime = request.form.get('transaction_time')
+        transactionRecipient = request.form.get('transaction_recipient')
+        transactionLoc = request.form.get('transaction_location')
+        transactionDate = request.form.get('recipient')
+        #code to import it to SQL database
+        #checkNewSus(acc_number, transaction_amt, transaction_time, transaction_recepient, transaction_loc):
+        
+        
+        
+        
+        
+        
+        
+        
+        
     if request.referrer and (request.referrer.endswith('/H2ABank/loggedin') or request.referrer.endswith('/H2ABank/settings') or (request.referrer.endswith('/H2ABank/login') )or (request.referrer.endswith('/H2ABank/transactions'))):
         return render_template('/H2ABank/transactions.html')
     else:
